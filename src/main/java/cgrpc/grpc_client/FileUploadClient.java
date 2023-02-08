@@ -33,6 +33,7 @@ public class FileUploadClient {
     public void fileupload() throws IOException {
         System.out.println("Will try to upload file...");
 
+        //request 보내는 StreamObserver 객체 얻기
         StreamObserver<FileUploadRequest> streamObserver = this.fileServiceStub.upload(new FileUploadObserver());
         FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
