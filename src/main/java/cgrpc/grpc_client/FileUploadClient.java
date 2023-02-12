@@ -57,4 +57,20 @@ public class FileUploadClient {
         streamObserver.onCompleted();
     }
 
+
+    public static class FileUploadObserver implements StreamObserver<FileUploadResponse> {
+        @Override
+        public void onNext(FileUploadResponse fileUploadResponse) {
+            System.out.println("File upload status::" + fileUploadResponse.getStatus());
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+        }
+
+        @Override
+        public void onCompleted() {
+        }
+    }
+
 }
