@@ -7,6 +7,7 @@ import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -20,7 +21,9 @@ public class FileUploadClient {
     private static final int PORT = 50052;
     public static final String HOST = "localhost";
 
-    Path path = Paths.get("src/main/resources/input/suzy.jpg");
+    //Path path = Paths.get("src/main/resources/input/suzy.jpg");
+    String path = "D:\\suzy.jpg";
+    java.io.File file = new java.io.File(path);
 
     private final FileServiceGrpc.FileServiceStub fileServiceStub = FileServiceGrpc.newStub(
             ManagedChannelBuilder.forAddress(HOST, PORT)
@@ -34,17 +37,18 @@ public class FileUploadClient {
 
         //custom request를 처리하는 StreamObserver 객체 얻기
         StreamObserver<FileUploadRequest> streamObserver = this.fileServiceStub.upload(new FileUploadObserver());
-        FileUploadRequest metadata = FileUploadRequest.newBuilder()
+        /**FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
                         .setName("output")
                         .setType("jpg").build())
                 .build();
-        streamObserver.onNext(metadata);
+        streamObserver.onNext(metadata);**/
 
-        InputStream inputStream = Files.newInputStream(path);
+        //InputStream inputStream = Files.newInputStream(path);
+        InputStream inputStream = new FileInputStream(file);
         byte[] bytes = new byte[4096];
         int size;
-        while((size=inputStream.read(bytes)) > 0){
+        while((size = inputStream.read(bytes)) != -1){
             FileUploadRequest uploadRequest = FileUploadRequest.newBuilder()
                     .setFile(File.newBuilder().setContents(ByteString.copyFrom(bytes, 0, size)).build())
                     .build();
