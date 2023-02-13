@@ -2,7 +2,6 @@ package cgrpc.grpc_client;
 
 import com.google.protobuf.ByteString;
 import file.*;
-import greet.GreeterGrpc;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,7 @@ public class FileUploadClient {
     public void fileupload() throws IOException {
         System.out.println("Will try to upload file...");
 
-        //request 보내는 StreamObserver 객체 얻기
+        //custom request를 처리하는 StreamObserver 객체 얻기
         StreamObserver<FileUploadRequest> streamObserver = this.fileServiceStub.upload(new FileUploadObserver());
         FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
