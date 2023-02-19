@@ -22,7 +22,7 @@ public class FileUploadClient {
     public static final String HOST = "localhost";
 
     //Path path = Paths.get("src/main/resources/input/suzy.jpg");
-    String path = "D:\\suzy.jpg";
+    String path = "D:\\chim.jpg";
     java.io.File file = new java.io.File(path);
 
     private final FileServiceGrpc.FileServiceStub fileServiceStub = FileServiceGrpc.newStub(
@@ -35,29 +35,45 @@ public class FileUploadClient {
     public void fileupload() throws IOException {
         System.out.println("Will try to upload file...");
 
+        InputStream inputStream = new FileInputStream(file);
+        //int len = inputStream.readAllBytes().length; //영혼 빨아먹듯 다 읽어버리네 얘가...
+
         //custom request를 처리하는 StreamObserver 객체 얻기
         StreamObserver<FileUploadRequest> streamObserver = this.fileServiceStub.upload(new FileUploadObserver());
-        /**FileUploadRequest metadata = FileUploadRequest.newBuilder()
+        FileUploadRequest metadata = FileUploadRequest.newBuilder()
                 .setMetadata(MetaData.newBuilder()
                         .setName("output")
-                        .setType("jpg").build())
+                        .setType("jpg")
+                        .build())
                 .build();
-        streamObserver.onNext(metadata);**/
+        streamObserver.onNext(metadata);
 
         //InputStream inputStream = Files.newInputStream(path);
-        InputStream inputStream = new FileInputStream(file);
+
         byte[] bytes = new byte[4096];
-        int size;
-        while((size = inputStream.read(bytes)) != -1){
-            FileUploadRequest uploadRequest = FileUploadRequest.newBuilder()
+        int size; FileUploadRequest uploadRequest;
+        while(true){
+            size = inputStream.read(bytes);
+            if(size <= 0) break;
+
+            uploadRequest = FileUploadRequest.newBuilder()
                     .setFile(File.newBuilder().setContents(ByteString.copyFrom(bytes, 0, size)).build())
                     .build();
 
             streamObserver.onNext(uploadRequest);
+            log.info("sent file with size: " + size);
         }
+        /*while((size = inputStream.read(bytes)) > 0){
+            uploadRequest = FileUploadRequest.newBuilder()
+                    .setFile(File.newBuilder().setContents(ByteString.copyFrom(bytes, 0, size)).build())
+                    .build();
 
-        inputStream.close();
+            streamObserver.onNext(uploadRequest);
+            log.info("sent file with size: " + size);
+        }*/
+
         streamObserver.onCompleted();
+        inputStream.close();
     }
 
 
