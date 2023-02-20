@@ -18,11 +18,11 @@ public class GrpcClientApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GrpcClientApplication.class, args);
 
-		try {
-			fileUploadClient.fileupload();
+		/*try {
+			fileUploadClient.fileupload("D:\\suzy.jpg");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		}
+		}*/
 	}
 
 }

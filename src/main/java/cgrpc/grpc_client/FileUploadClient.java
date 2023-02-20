@@ -22,8 +22,8 @@ public class FileUploadClient {
     public static final String HOST = "localhost";
 
     //Path path = Paths.get("src/main/resources/input/suzy.jpg");
-    String path = "D:\\chim.jpg";
-    java.io.File file = new java.io.File(path);
+    /*String path = "C:\\Users\\lovekite746\\Desktop\\Test Data\\1MB\\amelexik-cms-4.0.0-alpha4-0-gc96bc99.zip";
+    java.io.File file = new java.io.File(path);*/
 
     private final FileServiceGrpc.FileServiceStub fileServiceStub = FileServiceGrpc.newStub(
             ManagedChannelBuilder.forAddress(HOST, PORT)
@@ -32,9 +32,10 @@ public class FileUploadClient {
     );
 
 
-    public void fileupload() throws IOException {
+    public void fileupload(String path) throws IOException {
         System.out.println("Will try to upload file...");
 
+        java.io.File file = new java.io.File(path);
         InputStream inputStream = new FileInputStream(file);
         //int len = inputStream.readAllBytes().length; //영혼 빨아먹듯 다 읽어버리네 얘가...
 
